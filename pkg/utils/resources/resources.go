@@ -14,18 +14,29 @@ limitations under the License.
 
 package resources
 
+// Adding "import strings custom value"
+
 import (
+	"strings"
+	"fmt"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
 
 	"github.com/aws/karpenter/pkg/utils/pretty"
 )
 
+
 // RequestsForPods returns the total resources of a variadic list of podspecs.
 func RequestsForPods(pods ...*v1.Pod) v1.ResourceList {
 	var resources []v1.ResourceList
 	for _, pod := range pods {
+		fmt.Println(resources)
+		stringToCompare="smarter-devices/fuse"
+		if strings.Contains(resources, stringToCompare) {
+			fmt.Println("ignoring smarter device fuse")
+		} else {
 		resources = append(resources, Ceiling(pod).Requests)
+		}
 	}
 	merged := Merge(resources...)
 	merged[v1.ResourcePods] = *resource.NewQuantity(int64(len(pods)), resource.DecimalExponent)
@@ -36,7 +47,13 @@ func RequestsForPods(pods ...*v1.Pod) v1.ResourceList {
 func LimitsForPods(pods ...*v1.Pod) v1.ResourceList {
 	var resources []v1.ResourceList
 	for _, pod := range pods {
+		fmt.Println(resources)
+		stringToCompare="smarter-devices/fuse"
+		if strings.Contains(resources, stringToCompare) {
+			fmt.Println("ignoring smarter device fuse")
+		} else {
 		resources = append(resources, Ceiling(pod).Limits)
+		}
 	}
 	merged := Merge(resources...)
 	merged[v1.ResourcePods] = *resource.NewQuantity(int64(len(pods)), resource.DecimalExponent)
